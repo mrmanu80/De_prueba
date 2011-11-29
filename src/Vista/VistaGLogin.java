@@ -5,6 +5,7 @@
 
 /*
  * VistaGLogin.java
+ * Esta la interfaz SOLO para acceso (inicio de una sesion)
  *
  * Created on 23-nov-2011, 18:55:38
  */

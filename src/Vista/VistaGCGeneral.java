@@ -5,6 +5,7 @@
 
 /*
  * VistaGCGeneral.java
+ * Interfaz para listado de todo el catalogo
  *
  * Created on 23-nov-2011, 23:27:34
  */
@@ -22,6 +23,7 @@ import java.util.Set;
 import javax.swing.JDesktopPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
  *
@@ -48,6 +50,7 @@ public class VistaGCGeneral extends javax.swing.JInternalFrame implements Gestio
         vGFichaTitulo = new VistaGFichaTitulo(listaCategoriasDewey);
         jDesktopPane.add(vGFichaTitulo);
         jButtonMostrarFicha.setVisible(false);
+
     }
 
     // Implementacion de los metodos de 'GestionarModelo'
@@ -72,11 +75,19 @@ public class VistaGCGeneral extends javax.swing.JInternalFrame implements Gestio
 
     @Override
     public void setEditable(boolean setEditable) {
+        jTableCatalogo.setEnabled(setEditable);
+        if (!setEditable) {
+            jTableCatalogo.isCellEditable(0, 0);
+        }
     }
 
+    /**
+     * Clase Inner para guardar el catalogo (el modelo) vinculados a la tabla de la vista
+     * consulta general
+     */
     class CatalogoTableModel extends DefaultTableModel {
 
-        Object[] encabezado = {"Código", "F publicación", "Edicion", "Editorial", "Idioma", "Autor"};
+        Object[] encabezado = {"Código", "Título", "Idioma", "Autor"};
         //private Collection<Titulo> titulos;
         private ArrayList<Titulo> listaTitulos = new ArrayList<Titulo>();
 
@@ -90,10 +101,8 @@ public class VistaGCGeneral extends javax.swing.JInternalFrame implements Gestio
                 int j = 0;
                 // Extraemos los apellidos
                 data[i][j++] = titulo.getId().getDeweyCategoriaDewey() + "-" + titulo.getId().getIdApellido() + "-" + titulo.getId().getIdTitulo();
-                data[i][j++] = titulo.getFechaPublicacion();
-                data[i][j++] = titulo.getEdicion();
-                data[i][j++] = titulo.getEditorial().getNombreEditorial();
-                data[i][j++] = titulo.getIdioma6391().getIdioma6391();
+                data[i][j++] = titulo.getNombreTitulo();
+                data[i][j++] = WordUtils.capitalize(titulo.getIdioma6391().getIdioma6391());
                 Set<Autor> autores = titulo.getAutors();
                 Iterator<Autor> it = autores.iterator();
                 int numAutores = autores.size();
@@ -114,6 +123,10 @@ public class VistaGCGeneral extends javax.swing.JInternalFrame implements Gestio
                 i++;
             }
             setDataVector(data, encabezado);
+        }
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return false;
         }
 
         public void addTitulo(Titulo titulo) {
@@ -142,17 +155,6 @@ public class VistaGCGeneral extends javax.swing.JInternalFrame implements Gestio
 
         setTitle("Catálogo general");
 
-        jTableCatalogo.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         jTableCatalogo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableCatalogoMouseClicked(evt);
@@ -180,25 +182,26 @@ public class VistaGCGeneral extends javax.swing.JInternalFrame implements Gestio
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(156, 156, 156)
-                        .addComponent(jButtonAceptar)
-                        .addGap(40, 40, 40)
-                        .addComponent(jButtonMostrarFicha))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(245, 245, 245)
+                        .addComponent(jButtonAceptar)
+                        .addGap(50, 50, 50)
+                        .addComponent(jButtonMostrarFicha)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAceptar)
-                    .addComponent(jButtonMostrarFicha)))
+                    .addComponent(jButtonMostrarFicha))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();

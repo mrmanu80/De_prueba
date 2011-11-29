@@ -29,7 +29,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-/**
+/** Esta la interfaz de operacion principal del sistema
+ *  Da acceso a todas las funcionalidades
  *
  * @author nanohp
  */
@@ -59,6 +60,9 @@ public class VistaGPrincipal extends javax.swing.JFrame implements Observador {
     private VAcercaDe vAcercaDe;
     private Biblioteca biblioteca;
 
+    /*
+     * 
+     */
     public VistaGPrincipal(Observador padre, Controlador controlador, Usuario usuario, Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
         this.padre = padre;
@@ -90,6 +94,14 @@ public class VistaGPrincipal extends javax.swing.JFrame implements Observador {
 
         vAcercaDe = new VAcercaDe();
         jdpDesktop.add(vAcercaDe);
+        
+        // Habilitamos los menus en funcion del tipo de usuario
+        if (usuario.isAdministrador()) {
+            jMenuAdministrador.setVisible(true);
+        } else {
+            jMenuAdministrador.setVisible(false);
+        }
+
     }
 
     public VistaGCGeneral getvGCGeneral() {
@@ -253,6 +265,7 @@ public class VistaGPrincipal extends javax.swing.JFrame implements Observador {
         System.out.println(usuario);
         vGPerfilUsuario = new VistaGPerfilUsuario(usuario);
         jdpDesktop.add(vGPerfilUsuario);
+        vGPerfilUsuario.setEditable(false);
         vGPerfilUsuario.setVisible(true);
     }//GEN-LAST:event_jMenuItemMostrarPerfilActionPerformed
 
@@ -382,10 +395,10 @@ public class VistaGPrincipal extends javax.swing.JFrame implements Observador {
 
                     Titulo titulo = (Titulo) evento.getInfo();
                     if (titulo == null) {
-                         JOptionPane.showMessageDialog(this,
-                        "Fallo en la consulta de un titulo",
-                        "Error de consulta",
-                        JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this,
+                                "Fallo en la consulta de un titulo",
+                                "Error de consulta",
+                                JOptionPane.ERROR_MESSAGE);
                     } else {
                         vGFichaTitulo.fijarModelo(titulo);
                         vGCConcreta.setVisible(false);
